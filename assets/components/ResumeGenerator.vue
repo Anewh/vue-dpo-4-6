@@ -1,0 +1,48 @@
+<script>
+export default {
+    name: "ResumeGenerator",
+    props: ['resume'],
+}
+</script>
+
+<template>
+    <div class="col">
+        <div class="row mb-1">
+            <div class="col-md-12">
+                <div
+                    class="row g-0 border rounded overflow-hidden flex-md-row mb-9 shadow-sm h-md-250 position-relative">
+                    <div class="col-auto d-lg-block">
+                        <div id="photo" class="py-5 text-center container row col-lg-6 col-md-8 mx-auto">
+                            <img v-bind:src="resume.imagePreview" v-if="resume.isImageLoaded" width="200"
+                                class="img text-center" aria-label="Placeholder: Thumbnail" />
+                        </div>
+                    </div>
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <h3 class="mb-0">{{ resume.lastName + " " + resume.firstName + " " + resume.patronymic }}</h3>
+                        <div class="mb-0 text-muted">{{ resume.profession }}</div>
+                        <div class="mb-1 text-muted"> Опыт работы: {{ resume.experience }}</div>
+
+                        <div v-if="isComplexEduc">
+                            <p class="card-text mb-auto">Образование: {{ resume.secectedEduc }}</p>
+                            <p class="card-text mb-auto">Специальность: {{ resume.specialization }}</p>
+                            <p class="card-text mb-auto">Факультет: {{ resume.faculty }}</p>
+                            <p class="card-text mb-auto">Год окончания: {{ resume.endYear }}</p>
+                        </div>
+
+                        <div class="mb-1 text-muted"> Ожидаемая зарплата: {{ resume.expectedSalary }}</div>
+                    </div>
+                    <div class="mb-1 text-muted"> Почтовый адрес для связи - {{ resume.email }}.</div>
+                    <div class="mb-1 text-muted"> Контактный телефон - {{ resume.phone }}.</div>
+                    <div class="mb-1 text-muted"> Дата рождения: {{ resume.birthdate }}</div>
+
+                    <p class="card-text mb-auto" id="infoSkills">Обладаю следующими навыками: {{
+                        resume.skills
+                    }}
+                    </p>
+                    <p class="card-text mb-auto">Город проживания - {{ resume.city }}</p>
+                    <p class="card-text mb-auto">О себе - {{ resume.about }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

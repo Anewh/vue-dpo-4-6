@@ -43,7 +43,7 @@ export default {
     <ResumeSelect isSelectFirst='false' label="Образование" v-bind:values="educationTypes" 
         v-on:changed="(value) => educationData.type = this.educationTypes[value]" />
 
-    <div v-if="isComplexEduc">
+    <div v-if="isComplexEduc"><br>
         <ResumeInput fieldType="text" fieldName="institute" label="Учебное учреждение"
             v-on:isValidEvent="(value) => educationData.institute = value"
             v-on:isInvalidEvent="resetField" />

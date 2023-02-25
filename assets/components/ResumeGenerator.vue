@@ -9,8 +9,7 @@ export default {
     <div class="col">
         <div class="row mb-1">
             <div class="col-md-12">
-                <div
-                    class="row g-0 border rounded overflow-hidden flex-md-row mb-9 shadow-sm h-md-250 position-relative">
+                <div class="row g-0 border rounded overflow-hidden flex-md-row mb-9 shadow-sm h-md-250 position-relative">
                     <div class="col-auto d-lg-block">
                         <div id="photo" class="py-5 text-center container row col-lg-6 col-md-8 mx-auto">
                             <img v-bind:src="resume.imagePreview" v-if="resume.isImageLoaded" width="200"
@@ -23,12 +22,14 @@ export default {
                         <div class="mb-0 text-muted">{{ resume.profession }}</div>
                         <div class="mb-1 text-muted"> Опыт работы: {{ resume.experience }}</div>
 
-                        <div v-if="resume.education.isComplex">
-                            <p class="card-text mb-auto">Образование: {{ resume.education.type }}</p> 
-                            <p class="card-text mb-auto">Учебное учреждение: {{ resume.education.institute }}</p>
-                            <p class="card-text mb-auto">Специальность: {{ resume.education.specialization }}</p>
-                            <p class="card-text mb-auto">Факультет: {{ resume.education.faculty }}</p>
-                            <p class="card-text mb-auto">Год окончания: {{ resume.education.endYear }}</p>
+                        <div v-for="education in resume.educations">
+                            <div v-if="education.isComplex">
+                                <p class="card-text mb-auto">Образование: {{ education.type }}</p>
+                                <p class="card-text mb-auto">Учебное учреждение: {{ education.institute }}</p>
+                                <p class="card-text mb-auto">Специальность: {{ education.specialization }}</p>
+                                <p class="card-text mb-auto">Факультет: {{ education.faculty }}</p>
+                                <p class="card-text mb-auto">Год окончания: {{ education.endYear }}</p>
+                            </div>
                         </div>
                         <div class="mb-1 text-muted"> Ожидаемая зарплата: {{ resume.expectedSalary }}</div>
                     </div>

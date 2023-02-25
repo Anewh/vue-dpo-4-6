@@ -29,7 +29,7 @@ export default {
 <template>
     <div class="col-md-6">
         <label class="form-label">{{ label }}</label>
-        <select v-model="selectedValue" class="form-select">
+        <select v-model="selectedValue" class="form-select md-3">
             <!-- <option v-if="1" selected> {{ Новое }} </option> -->
             <option v-for="(value, key) in values" v-bind:value="key">{{ value }}</option>
         </select>

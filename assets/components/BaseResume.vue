@@ -4,11 +4,12 @@ import ResumeSelect from './ResumeSelect.vue'
 import ResumeEducation from './ResumeEducation.vue'
 import ResumeGenerator from './ResumeGenerator.vue'
 
-const RESUME_STATUSES = {level0:'Новое', level1: 'Назначено собеседование', level2: 'Принят', level3: 'Отказ'};
+const RESUME_STATUSES = { level0: 'Новое', level1: 'Назначено собеседование', level2: 'Принят', level3: 'Отказ' };
+const EMPTY_EDUCATION_DATA = { type: '', institute: '', faculty: '', specialization: '', endYear: '', isComplex: '', }
 
 export default {
     name: "BaseResume",
-    components: { ResumeInput, ResumeEducation, ResumeGenerator, ResumeSelect},
+    components: { ResumeInput, ResumeEducation, ResumeGenerator, ResumeSelect },
 
     data() {
         return {
@@ -25,16 +26,9 @@ export default {
                 experience: '',
                 skills: '',
                 about: '',
-                status: RESUME_STATUSES['level0'],
 
-                education: {
-                    type: '', // выбранное образование
-                    institute: '',
-                    faculty: '',
-                    specialization: '',
-                    endYear: '',
-                    isComplex: '',
-                },
+                status: RESUME_STATUSES['level0'],
+                educations: [structuredClone(EMPTY_EDUCATION_DATA)],
 
                 imagePreview: '', //путь к картинке
                 isImageLoaded: false,
@@ -43,7 +37,7 @@ export default {
             },
 
             file: '',
-            
+
             // institute: '',
             // faculty: '',
             // specialization: '',
@@ -97,14 +91,12 @@ export default {
                                     v-on:isInvalidEvent="resetField" />
 
                                 <ResumeInput fieldType="text" fieldName="patronymic" label="Отчество"
-                                    errorMessage="Введите отчество"
-                                    v-on:isValidEvent="(value) => values.patronymic = value"
+                                    errorMessage="Введите отчество" v-on:isValidEvent="(value) => values.patronymic = value"
                                     v-on:isInvalidEvent="resetField" />
 
                                 <ResumeInput fieldType="text" fieldName="email" label="Email"
                                     errorMessage="Введите корректный email"
-                                    v-on:isValidEvent="(value) => values.email = value"
-                                    v-on:isInvalidEvent="resetField" />
+                                    v-on:isValidEvent="(value) => values.email = value" v-on:isInvalidEvent="resetField" />
 
                                 <ResumeInput fieldType="date" fieldName="birthdate" label="Дата рождения"
                                     v-on:isValidEvent="(value) => values.birthdate = value"
@@ -112,12 +104,17 @@ export default {
 
                                 <ResumeInput fieldType="text" fieldName="phone" label="Телефон"
                                     errorMessage="Введите корректный номер телефона"
-                                    v-on:isValidEvent="(value) => values.phone = value"
-                                    v-on:isInvalidEvent="resetField" />
+                                    v-on:isValidEvent="(value) => values.phone = value" v-on:isInvalidEvent="resetField" />
 
-                                <ResumeEducation v-bind:educationData="values.education" />
+                                <div class="bd-example">
+                                    <hr>
+                                    <div v-for="education in values.educations">
+                                        <ResumeEducation v-bind:educationData="education" />
+                                        <hr>
+                                    </div>
+                                </div>
                                 <!-- v-bind:defaultValue="Object.keys(resumeStatuses)[0]" -->
-                                <ResumeSelect isSelectFirst='true' label="Статус"  v-bind:values="values.resumeStatuses"
+                                <ResumeSelect isSelectFirst='true' label="Статус" v-bind:values="values.resumeStatuses"
                                     v-on:changed="(value) => values.status = values.resumeStatuses[value]" />
 
                                 <ResumeInput fieldType="text" fieldName="profession" label="Желаемая профессия"
@@ -133,16 +130,13 @@ export default {
                                     v-on:isInvalidEvent="resetField" />
 
                                 <ResumeInput fieldType="text" fieldName="skills" label="Навыки"
-                                    v-on:isValidEvent="(value) => values.skills = value"
-                                    v-on:isInvalidEvent="resetField" />
+                                    v-on:isValidEvent="(value) => values.skills = value" v-on:isInvalidEvent="resetField" />
 
                                 <ResumeInput fieldType="text" fieldName="about" label="О себе"
-                                    v-on:isValidEvent="(value) => values.about = value"
-                                    v-on:isInvalidEvent="resetField" />
+                                    v-on:isValidEvent="(value) => values.about = value" v-on:isInvalidEvent="resetField" />
 
                                 <ResumeInput fieldType="text" fieldName="city" label="Город"
-                                    v-on:isValidEvent="(value) => values.city = value"
-                                    v-on:isInvalidEvent="resetField" />
+                                    v-on:isValidEvent="(value) => values.city = value" v-on:isInvalidEvent="resetField" />
 
                                 <div class="input-group mb-3">
                                     <div class="container">
@@ -162,7 +156,6 @@ export default {
             </div>
         </div>
     </div>
-
 </template>
 
 <style scoped>

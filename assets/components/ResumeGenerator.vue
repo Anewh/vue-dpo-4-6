@@ -18,17 +18,18 @@ export default {
                         </div>
                     </div>
                     <div class="col p-4 d-flex flex-column position-static">
+                        <p class="card-text mb-auto">Статус: {{ resume.status }}</p>
                         <h3 class="mb-0">{{ resume.lastName + " " + resume.firstName + " " + resume.patronymic }}</h3>
                         <div class="mb-0 text-muted">{{ resume.profession }}</div>
                         <div class="mb-1 text-muted"> Опыт работы: {{ resume.experience }}</div>
 
-                        <div v-if="isComplexEduc">
-                            <p class="card-text mb-auto">Образование: {{ resume.secectedEduc }}</p>
-                            <p class="card-text mb-auto">Специальность: {{ resume.specialization }}</p>
-                            <p class="card-text mb-auto">Факультет: {{ resume.faculty }}</p>
-                            <p class="card-text mb-auto">Год окончания: {{ resume.endYear }}</p>
+                        <div v-if="resume.education.isComplex">
+                            <p class="card-text mb-auto">Образование: {{ resume.education.type }}</p> 
+                            <p class="card-text mb-auto">Учебное учреждение: {{ resume.education.institute }}</p>
+                            <p class="card-text mb-auto">Специальность: {{ resume.education.specialization }}</p>
+                            <p class="card-text mb-auto">Факультет: {{ resume.education.faculty }}</p>
+                            <p class="card-text mb-auto">Год окончания: {{ resume.education.endYear }}</p>
                         </div>
-
                         <div class="mb-1 text-muted"> Ожидаемая зарплата: {{ resume.expectedSalary }}</div>
                     </div>
                     <div class="mb-1 text-muted"> Почтовый адрес для связи - {{ resume.email }}.</div>

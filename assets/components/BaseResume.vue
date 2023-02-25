@@ -1,11 +1,14 @@
 <script>
 import ResumeInput from './ResumeInput.vue'
+import ResumeSelect from './ResumeSelect.vue'
 import ResumeEducation from './ResumeEducation.vue'
 import ResumeGenerator from './ResumeGenerator.vue'
 
+const RESUME_STATUSES = {level0:'Новое', level1: 'Назначено собеседование', level2: 'Принят', level3: 'Отказ'};
+
 export default {
     name: "BaseResume",
-    components: { ResumeInput, ResumeEducation, ResumeGenerator, },
+    components: { ResumeInput, ResumeEducation, ResumeGenerator, ResumeSelect},
 
     data() {
         return {
@@ -22,6 +25,7 @@ export default {
                 experience: '',
                 skills: '',
                 about: '',
+                status: RESUME_STATUSES['level0'],
 
                 education: {
                     type: '', // выбранное образование
@@ -29,18 +33,21 @@ export default {
                     faculty: '',
                     specialization: '',
                     endYear: '',
+                    isComplex: '',
                 },
 
                 imagePreview: '', //путь к картинке
-                isImageLoaded: false
+                isImageLoaded: false,
+
+                resumeStatuses: RESUME_STATUSES
             },
 
             file: '',
             
-            institute: '',
-            faculty: '',
-            specialization: '',
-            endYear: '',
+            // institute: '',
+            // faculty: '',
+            // specialization: '',
+            // endYear: '',
         }
     },
     methods: {
@@ -109,6 +116,9 @@ export default {
                                     v-on:isInvalidEvent="resetField" />
 
                                 <ResumeEducation v-bind:educationData="values.education" />
+                                <!-- v-bind:defaultValue="Object.keys(resumeStatuses)[0]" -->
+                                <ResumeSelect isSelectFirst='true' label="Статус"  v-bind:values="values.resumeStatuses"
+                                    v-on:changed="(value) => values.status = values.resumeStatuses[value]" />
 
                                 <ResumeInput fieldType="text" fieldName="profession" label="Желаемая профессия"
                                     v-on:isValidEvent="(value) => values.profession = value"

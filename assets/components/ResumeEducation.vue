@@ -24,7 +24,6 @@ export default {
                 return this.educationData.isComplex = this.educationData.type === this.educationTypes.level1 ||
                     this.educationData.type === this.educationTypes.level2 ||
                     this.educationData.type === this.educationTypes.level3;
-                // return this.educationData.isComplex;
             },
             set(newValue) {
                 this.value = newValue;
@@ -62,18 +61,8 @@ export default {
             <ResumeInput fieldType="text" fieldName="specialization" label="Специализация"
                 v-on:isValidEvent="(value) => educationData.specialization = value" v-on:isInvalidEvent="resetField" />
         </div>
-        <!-- </div> -->
         <div></div>
-        <!-- <div class="col md-2"> -->
         <button class="btn btn-primary" style="margin: 1em; width: 150px" v-on:click="$emit('remove', educationData.index)">
             Удалить </button>
     </div>
-    <!-- </div> -->
-    <!-- </div> -->
 </template>
-
-<!-- <style>
-button {
-    margin: 1em;
-}
-</style> -->

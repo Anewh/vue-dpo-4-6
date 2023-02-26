@@ -25,7 +25,7 @@ export default {
                         <div v-for="education in resume.educations">
                             <p class="card-text mb-auto">Образование: {{ education.type }}</p>
                             <div v-if="education.isComplex">
-                                <!-- <p class="card-text mb-auto">Образование: {{ education.type }}</p> -->
+                                
                                 <p class="card-text mb-auto">Учебное учреждение: {{ education.institute }}</p>
                                 <p class="card-text mb-auto">Специальность: {{ education.specialization }}</p>
                                 <p class="card-text mb-auto">Факультет: {{ education.faculty }}</p>
@@ -43,7 +43,7 @@ export default {
                         resume.skills
                     }}
                     </p>
-                    <p class="card-text mb-auto">Город проживания - {{ resume.city }}</p>
+                    <p class="card-text mb-auto">Город проживания - {{ resume.city['title'] }}</p>
                     <p class="card-text mb-auto">О себе - {{ resume.about }}</p>
                 </div>
             </div>

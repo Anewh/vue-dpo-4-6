@@ -1,11 +1,12 @@
 <script>
 import ResumeSelect from './ResumeSelect.vue'
 import ResumeInput from './ResumeInput.vue'
+import EducOrganizationInput from './EducOrganizationInput.vue';
 
 export default {
     name: "ResumeEducation",
-    components: { ResumeSelect, ResumeInput },
-    props: ["educationData"],
+    components: { ResumeSelect, ResumeInput, EducOrganizationInput },
+    props: ["educationData", "vkData"],
     emits: ["remove"],
 
     data() {
@@ -43,18 +44,20 @@ export default {
     <div class="row">
         <ResumeSelect isSelectFirst='false' label="Образование" v-bind:values="educationTypes"
             v-on:changed="(value) => educationData.type = this.educationTypes[value]" />
+            <button class="btn btn-primary" style="margin: 1em; width: 150px; margin-top: 30px" v-on:click="$emit('remove', educationData.index)">
+            Удалить </button>
         <div class="bd-example">
             <!-- <hr> -->
-            <br/>
+            <br />
         </div>
         <div class="row" v-if="isComplexEduc">
             <!-- <br> -->
-            <ResumeInput fieldType="text" fieldName="institute" label="Учебное учреждение"
+            <EducOrganizationInput fieldName="institute" v-bind:vkData="vkData"
                 v-on:isValidEvent="(value) => educationData.institute = value" v-on:isInvalidEvent="resetField" />
-
+        
             <ResumeInput fieldType="text" fieldName="faculty" label="Факультет"
                 v-on:isValidEvent="(value) => educationData.faculty = value" v-on:isInvalidEvent="resetField" />
-
+                
             <ResumeInput fieldType="number" fieldName="endYear" label="Год окончания"
                 v-on:isValidEvent="(value) => educationData.endYear = value" v-on:isInvalidEvent="resetField" />
 
@@ -62,7 +65,7 @@ export default {
                 v-on:isValidEvent="(value) => educationData.specialization = value" v-on:isInvalidEvent="resetField" />
         </div>
         <div></div>
-        <button class="btn btn-primary" style="margin: 1em; width: 150px" v-on:click="$emit('remove', educationData.index)">
-            Удалить </button>
+        <!-- <button class="btn btn-primary" style="margin: 1em; width: 150px" v-on:click="$emit('remove', educationData.index)">
+            Удалить </button> -->
     </div>
 </template>

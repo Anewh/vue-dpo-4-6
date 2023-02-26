@@ -40,10 +40,12 @@ export default {
 
             file: '',
 
-            // institute: '',
-            // faculty: '',
-            // specialization: '',
-            // endYear: '',
+            vkData: {
+                russiaId: undefined,
+                cities: [],
+                universities: [],
+                selectedCity: undefined
+            },
         }
     },
     methods: {
@@ -71,7 +73,7 @@ export default {
     <div class="position-relative overflow-hidden p-1 p-md-3 m-md-1 text-center bcground">
         <div class="col-md-3 p-lg-3 mx-auto my-3">
             <p class="lead fw-normal pb-4 mb-4 border-bottom">Заполните поля</p>
-    </div>
+        </div>
         <div class="product-device shadow-sm d-none d-md-block"></div>
         <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
     </div>
@@ -105,7 +107,10 @@ export default {
                                 errorMessage="Введите корректный номер телефона"
                                 v-on:isValidEvent="(value) => values.phone = value" v-on:isInvalidEvent="resetField" />
 
-                            <ResumeList v-bind:educations="values.educations" />
+                            <ResumeInputCity label="Город" type="text" v-bind:vkData="vkData"
+                                v-on:city-selected="(city) => values.city = city" v-on:isInvalidEvent="resetField" />
+
+                            <ResumeList v-bind:educations="values.educations" v-bind:vkData="vkData" />
 
                             <ResumeSelect isSelectFirst='true' label="Статус" v-bind:values="values.resumeStatuses"
                                 v-on:changed="(value) => values.status = values.resumeStatuses[value]" />
@@ -126,10 +131,6 @@ export default {
                             <ResumeInput fieldType="text" fieldName="about" label="О себе"
                                 v-on:isValidEvent="(value) => values.about = value" v-on:isInvalidEvent="resetField" />
 
-                            <ResumeInputCity label="Город" type="text"
-                                @city-selected="(city) => values.city = city"
-                                v-on:isInvalidEvent="resetField">
-                            </ResumeInputCity>
                             <div class="input-group mb-3">
                                 <div class="container">
                                     <div class="large-12 medium-12 small-12 cell">

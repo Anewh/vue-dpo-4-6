@@ -1,22 +1,13 @@
 <script>
 import { vkApi } from "../controllers/VkApiController.js";
 export default {
-    name: "ResumeInputCity",
-    props: ['name', 'label', 'type', 'help', 'constraints'],
-    emits: ['city-selected', 'validated', 'isInvalidEvent'],
+    name: "EducOrganizationInput",
+    props: ['fieldName', 'vkData'],
+    emits: ['isValidEvent', 'isInvalidEvent'],
     data() {
         return {
-            hasChanged: false,
-            value: '',
-            vkData: {
-                russiaId: undefined,
-                cities: [],
-                selectedCity: undefined
-            },
+            value: ''
         }
-    },
-    mounted() {
-        this.queryRussiaCountryId();
     },
     computed: {
         inputValue: {
@@ -25,78 +16,50 @@ export default {
             },
             set(newValue) {
                 this.value = newValue;
-                this.hasChanged = true;
-                this.queryCitiesList(newValue);
-                this.$emit('validated', this.name, newValue);
-
+                if (this.vkData.selectedCity) {
+                    this.queryUniversities(this.value);
+                }
+                this.$emit('isValidEvent', this.fieldName, this.value);
             }
         }
     },
     methods: {
-        queryCitiesList(query) {
-            this.queryRussiaCountryId();
+        queryUniversities(query) {
             vkApi
-                .get(vkApi.methods.database.getCities, {
+                .get(vkApi.methods.database.getUniversities, {
                     country_id: this.vkData.russiaId,
-                    q: query.substr(0, 15),
-                    need_all: 1,
+                    city_id: this.vkData.selectedCity.id,
+                    q: query,
                     count: 10
-                }, (function (err, data) {
-                    this.vkData.cities = data.response.items;
+                }, (function (_, data) {
+                    this.vkData.universities = data.response.items;
                 }).bind(this));
         },
-        queryRussiaCountryId() {
-            if (this.vkData.russiaId !== undefined) {
-                return;
-            }
-            vkApi
-                .get(vkApi.methods.database.getCountries, {
-                    code: 'RU',
-                    count: 1
-                }, (function (err, data) {
-                    this.vkData.russiaId = data.response.items[0].id;
-                }).bind(this));
+
+        selectUniversity(cityId) {
+            let university = this.vkData.universities.find((city) => city.id === cityId);
+            this.value = university.title;
+            this.vkData.universities = [];
+            this.$emit('isValidEvent', university.title);
         },
-        formatCityData(city) {
-            let s = city.title;
-            let additionalData = [];
-            if (city.area) {
-                additionalData.push(city.area);
-            }
-            if (city.region) {
-                additionalData.push(city.region);
-            }
-            if (additionalData.length > 0) {
-                s += ' (' + additionalData.join(', ') + ')';
-            }
-            return s;
-        },
-        selectCity(cityId) {
-            let city = this.vkData.cities.find((city) => city.id === cityId);
-            this.value = city.title;
-            this.vkData.cities = [];
-            this.$emit('city-selected', city);
-            this.$emit('validated', this.name, city.title);
-        }
     }
 }
 </script>
 
 <template>
-    <div class="mb-3">
-        <label class="mb-2">{{ label }}</label>
+    <!-- <div class="mb-3"> -->
+        <label class="mb-2">Учебное учреждение</label>
         <div class="field">
-            <input v-bind:type="type" v-model="inputValue" class="form-control"
-                style="width: 350px; margin-left:85px;">
-            <div v-if="help" class="form-text mt-2">{{ help }}</div>
-            <ul v-show="vkData.cities.length > 0" class="field__helpers list-group">
-                <li v-for="city in vkData.cities" :key="city.id" @click="selectCity(city.id)"
-                    class="list-group-item list-group-item-action">
-                    {{ formatCityData(city) }}
+            <input type="text" v-model="inputValue" class="form-control">
+            <!-- style="width: 350px; margin-left:85px;" -->
+            <ul v-show="vkData.universities.length > 0" class="field__helpers list-group">
+                <li v-for="university in vkData.universities" :key="university.id"
+                    v-on:click="selectUniversity(university.id)" class="list-group-item list-group-item-action">
+                    {{ university.title }}
                 </li>
             </ul>
         </div>
-    </div>
+    <!-- </div> -->
 </template>
 
 <style scoped>

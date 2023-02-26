@@ -2,17 +2,12 @@
 import { vkApi } from "../controllers/VkApiController.js";
 export default {
     name: "ResumeInputCity",
-    props: ['name', 'label', 'type', 'help', 'constraints'],
+    props: ['name', 'label', 'type', 'help', 'vkData'],
     emits: ['city-selected', 'validated', 'isInvalidEvent'],
     data() {
         return {
             hasChanged: false,
-            value: '',
-            vkData: {
-                russiaId: undefined,
-                cities: [],
-                selectedCity: undefined
-            },
+            value: ''
         }
     },
     mounted() {
@@ -26,14 +21,13 @@ export default {
             set(newValue) {
                 this.value = newValue;
                 this.hasChanged = true;
-                this.queryCitiesList(newValue);
+                this.queryCities(newValue);
                 this.$emit('validated', this.name, newValue);
-
             }
         }
     },
     methods: {
-        queryCitiesList(query) {
+        queryCities(query) {
             this.queryRussiaCountryId();
             vkApi
                 .get(vkApi.methods.database.getCities, {
@@ -75,6 +69,7 @@ export default {
             let city = this.vkData.cities.find((city) => city.id === cityId);
             this.value = city.title;
             this.vkData.cities = [];
+            this.vkData.selectedCity = city;
             this.$emit('city-selected', city);
             this.$emit('validated', this.name, city.title);
         }

@@ -6,7 +6,7 @@ const EMPTY_EDUCATION_DATA = { index: 0, type: '', institute: '', faculty: '', s
 export default {
     name: "ResumeList",
     components: { ResumeEducation },
-    props: ["educations"],
+    props: ["educations", "vkData"],
     methods: {
         addEduc() {
             let newEducation = structuredClone(EMPTY_EDUCATION_DATA);
@@ -24,7 +24,7 @@ export default {
     <div class="bd-example">
         <hr>
         <div v-for="education in educations" v-bind:key="education.index">
-            <ResumeEducation v-bind:educationData="education" v-on:remove="removeEduc" />
+            <ResumeEducation v-bind:educationData="education" v-bind:vkData="vkData" v-on:remove="removeEduc" />
             <hr>
         </div>
         <label for="new-todo" class="form-label"></label>

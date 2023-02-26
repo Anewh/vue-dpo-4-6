@@ -6,6 +6,7 @@ export default {
     name: "ResumeEducation",
     components: {ResumeSelect, ResumeInput},
     props: ["educationData"],
+    emits: ["remove"],
 
     data() {
         return {
@@ -20,10 +21,10 @@ export default {
     computed: {
         isComplexEduc: {   // Проверка выбранного образования
             get() {
-            this.educationData.isComplex = this.educationData.type === this.educationTypes.level1 ||
+                return this.educationData.isComplex = this.educationData.type === this.educationTypes.level1 ||
                 this.educationData.type === this.educationTypes.level2 ||
                 this.educationData.type === this.educationTypes.level3;
-            return this.educationData.isComplex;
+            // return this.educationData.isComplex;
             },
             set(newValue) {
                 this.value = newValue;
@@ -34,7 +35,7 @@ export default {
     methods: {
         resetField(field) {
             this.values[field] = '';
-        },
+        }
     }
 }
 </script>
@@ -60,4 +61,5 @@ export default {
             v-on:isValidEvent="(value) => educationData.specialization = value"
             v-on:isInvalidEvent="resetField" />
     </div>
+    <button v-on:click="$emit('remove', educationData.index)">Удалить</button>
 </template>

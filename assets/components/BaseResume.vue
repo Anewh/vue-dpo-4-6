@@ -3,13 +3,14 @@ import ResumeInput from './ResumeInput.vue'
 import ResumeSelect from './ResumeSelect.vue'
 import ResumeEducation from './ResumeEducation.vue'
 import ResumeGenerator from './ResumeGenerator.vue'
+import ResumeList from './ResumeList.vue'
 
 const RESUME_STATUSES = { level0: 'Новое', level1: 'Назначено собеседование', level2: 'Принят', level3: 'Отказ' };
-const EMPTY_EDUCATION_DATA = { type: '', institute: '', faculty: '', specialization: '', endYear: '', isComplex: '', }
+const EMPTY_EDUCATION_DATA = { index: 0, type: '', institute: '', faculty: '', specialization: '', endYear: '', isComplex: '', };
 
 export default {
     name: "BaseResume",
-    components: { ResumeInput, ResumeEducation, ResumeGenerator, ResumeSelect },
+    components: { ResumeInput, ResumeEducation, ResumeGenerator, ResumeSelect, ResumeList },
 
     data() {
         return {
@@ -106,13 +107,16 @@ export default {
                                     errorMessage="Введите корректный номер телефона"
                                     v-on:isValidEvent="(value) => values.phone = value" v-on:isInvalidEvent="resetField" />
 
-                                <div class="bd-example">
+                                <!-- <div class="bd-example">
                                     <hr>
                                     <div v-for="education in values.educations">
                                         <ResumeEducation v-bind:educationData="education" />
                                         <hr>
                                     </div>
-                                </div>
+                                </div> -->
+
+                                <ResumeList v-bind:educations="values.educations"/>
+                                
                                 <!-- v-bind:defaultValue="Object.keys(resumeStatuses)[0]" -->
                                 <ResumeSelect isSelectFirst='true' label="Статус" v-bind:values="values.resumeStatuses"
                                     v-on:changed="(value) => values.status = values.resumeStatuses[value]" />

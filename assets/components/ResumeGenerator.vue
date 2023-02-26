@@ -23,13 +23,15 @@ export default {
                         <div class="mb-1 text-muted"> Опыт работы: {{ resume.experience }}</div>
 
                         <div v-for="education in resume.educations">
+                            <p class="card-text mb-auto">Образование: {{ education.type }}</p>
                             <div v-if="education.isComplex">
-                                <p class="card-text mb-auto">Образование: {{ education.type }}</p>
+                                <!-- <p class="card-text mb-auto">Образование: {{ education.type }}</p> -->
                                 <p class="card-text mb-auto">Учебное учреждение: {{ education.institute }}</p>
                                 <p class="card-text mb-auto">Специальность: {{ education.specialization }}</p>
                                 <p class="card-text mb-auto">Факультет: {{ education.faculty }}</p>
                                 <p class="card-text mb-auto">Год окончания: {{ education.endYear }}</p>
                             </div>
+                            <br>
                         </div>
                         <div class="mb-1 text-muted"> Ожидаемая зарплата: {{ resume.expectedSalary }}</div>
                     </div>

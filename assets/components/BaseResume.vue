@@ -79,7 +79,7 @@ export default {
             <div id="resume">
                 <div class="row">
                     <div class="col">
-                        <div id="resume-app">
+                        <!-- <div id="resume-app"> -->
                             <div class="row g-3">
                                 <ResumeInput fieldType="text" fieldName="firstName" label="Имя"
                                     errorMessage="Введите корректное имя"
@@ -152,7 +152,7 @@ export default {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            <!-- </div> -->
                         </div>
                     </div>
                     <ResumeGenerator v-bind:resume="values" />

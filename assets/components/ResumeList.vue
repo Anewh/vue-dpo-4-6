@@ -38,7 +38,8 @@ export default {
         // },
         addEduc() {
             let newEducation = structuredClone(EMPTY_EDUCATION_DATA);
-            newEducation.index = this.educations[this.educations.length - 1].index + 1;
+            //newEducation.index = this.educations[this.educations.length - 1].index + 1;
+            newEducation.index = this.educations.length > 0 ? this.educations[this.educations.length - 1].index + 1 : 0;
             this.educations.push(newEducation);
             // this.todos.push({
             //     id: this.nextTodoId++,
@@ -55,28 +56,30 @@ export default {
 
 <template>
     <!-- <div id="todo-list-example">
-                    <form v-on:submit.prevent="addNewTodo">
-                        <label for="new-todo">Добавить задачу</label>
-                        <input v-model="newTodoText" id="new-todo" placeholder="Например, покормить кота">
-                        <button>Добавить</button>
-                    </form>
-                    <ul>
-                        <ResumeListItem is="todo-item" v-for="(todo, index) in todos" v-bind:key="todo.id" v-bind:title="todo.title"
-                            v-on:remove="todos.splice(index, 1)"> {{ todo.title }}
-                        </ResumeListItem>
-                    </ul> 
-                </div>-->
+                        <form v-on:submit.prevent="addNewTodo">
+                            <label for="new-todo">Добавить задачу</label>
+                            <input v-model="newTodoText" id="new-todo" placeholder="Например, покормить кота">
+                            <button>Добавить</button>
+                        </form>
+                        <ul>
+                            <ResumeListItem is="todo-item" v-for="(todo, index) in todos" v-bind:key="todo.id" v-bind:title="todo.title"
+                                v-on:remove="todos.splice(index, 1)"> {{ todo.title }}
+                            </ResumeListItem>
+                        </ul> 
+                    </div>-->
 
     <div class="bd-example">
-        <label for="new-todo">Добавить образование</label>
-        <!-- <input v-model="newTodoText" id="new-todo" placeholder="Например, покормить кота"> -->
-        <button v-on:click="addEduc">Добавить</button>
         <hr>
-        
-        <div v-for="education in educations" v-bind:key="education.index">
-            <ResumeEducation v-bind:educationData="education" v-on:remove="removeEduc" />
-            <hr>
-        </div>
+        <!-- <div class="row g-3"> -->
+            <div v-for="education in educations" v-bind:key="education.index">
+                <ResumeEducation v-bind:educationData="education" v-on:remove="removeEduc" />
+                <hr>
+            </div>
+        <!-- </div> -->
+        <label for="new-todo" class="form-label" ></label>
+        <!-- <input v-model="newTodoText" id="new-todo" placeholder="Например, покормить кота"> -->
+        <button v-on:click="addEduc" class="btn btn-primary" style="margin: 1em; width: 300px">Добавить образование</button>
+        <hr>
     </div>
     <!-- <ResumeListItem /> -->
 </template>

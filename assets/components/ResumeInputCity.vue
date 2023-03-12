@@ -4,7 +4,7 @@ import {vkApi} from "../controllers/VkApiController.js";
 export default {
     name: "ResumeInputCity",
     props: ["label", "fieldName", "type", "help", "vkData", "modelValue"],
-    emits: ["update:modelValue"],
+    emits: ["update:modelValue", 'afterValidate'],
     data() {
         return {}
     },
@@ -19,6 +19,7 @@ export default {
             set(newValue) {
                 this.$emit("update:modelValue", newValue);
                 this.queryCities(newValue);
+                this.$emit("afterValidate", this.fieldName, newValue, true);
             }
         }
     },
@@ -67,6 +68,7 @@ export default {
             this.vkData.selectedCity = city;
             this.vkData.cities = [];
             this.$emit("update:modelValue", city.title);
+            this.$emit("afterValidate", this.fieldName, city.title, true);
         }
     }
 }

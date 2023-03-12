@@ -1,11 +1,11 @@
 <script>
-import {RESUME_STATUSES} from './BaseResume'
+import { RESUME_STATUSES } from './BaseResume'
 import draggable from "vuedraggable";
-import {resumeApi} from "../controllers/ResumeApiController";
+import { resumeApi } from "../controllers/ResumeApiController";
 
 export default {
   name: "ResumeStatusLists",
-  components: {draggable},
+  components: { draggable },
   data() {
     return {
       resumeStatuses: RESUME_STATUSES,
@@ -18,19 +18,24 @@ export default {
     }
 
     resumeApi.getAll()
-        .then((response) => {
-          for (const resume of response.data) {
-            this.resumeStatusLists[resume.status].push(resume);
-          }
-        });
+      .then((response) => {
+        for (const resume of response.data) {
+          this.resumeStatusLists[resume.status].push(resume);
+        }
+      });
   },
   methods: {
     sendStatusUpdate(e) {
       const newStatus = e.to.getAttribute('status');
       resumeApi.statusUpdate(
-          this.resumeStatusLists[newStatus][e.newIndex].id,
-          newStatus
+        this.resumeStatusLists[newStatus][e.newIndex].id,
+        newStatus
       );
+    },
+    declOfNum(number, titles) { // склонение именительных рядом с числительным
+      cases = [2, 0, 1, 1, 1, 2];
+      //console.log(number + " " + titles[(number % 100 > 4 && number % 100 < 20) ? 2 : cases[(number % 10 < 5) ? number % 10 : 5]]);
+      return number + " " + titles[(number % 100 > 4 && number % 100 < 20) ? 2 : cases[(number % 10 < 5) ? number % 10 : 5]];
     }
   }
 }
@@ -38,20 +43,14 @@ export default {
 
 <template>
   <div class="d-flex flex-row">
-    <div
-        v-for="(resumes, status) in resumeStatusLists"
-        :key="status"
-        class="card-list d-flex flex-column p-3 pb-0 border rounded-3 mx-2"
-    >
+    <div v-for="(resumes, status) in resumeStatusLists" :key="status" class="container text-center">
       <p class="text-center border-bottom mb-3 pb-3">
         {{ resumeStatuses[status] + ' (' + resumes.length + ')' }}
       </p>
-      <draggable :list="resumeStatusLists[status]" :component-data="{status: status}"
-                 group="cards" itemKey="id"
-                 @end="sendStatusUpdate"
-      >
+      <draggable :list="resumeStatusLists[status]" :component-data="{ status: status }" group="cards" itemKey="id"
+        @end="sendStatusUpdate">
         <template #item="{ element }">
-          <div class="card rounded-3 mb-3">
+          <div class="card rounded-2 mb-5">
             <img v-if="element.imagePreview" :src="element.imagePreview" class="card-img-top" alt="">
 
             <div class="card-body">
@@ -60,13 +59,13 @@ export default {
               </h5>
 
               <p class="card-text">
-                ФИО: {{ element.lastName + ' ' + element.firstName + ' ' + element.patronymic }}
+                {{ element.lastName + ' ' + element.firstName + ' ' + element.patronymic }}
               </p>
-              <p class="card-text text-sm-start">
-                Возраст: {{ new Date().getFullYear() - new Date(element.birthdate).getFullYear() }}
+              <p class="card-text text-sm">
+                Полных лет - {{ new Date().getFullYear() - new Date(element.birthdate).getFullYear() }}
               </p>
 
-              <router-link :to="{name: 'resumeEdit', params: {id: element.id}}">
+              <router-link :to="{ name: 'resumeEdit', params: { id: element.id } }" class="btn btn-outline-secondary">
                 Редактировать
               </router-link>
             </div>
@@ -79,6 +78,4 @@ export default {
 
 
 
-<style scoped>
-
-</style>
+<style scoped></style>

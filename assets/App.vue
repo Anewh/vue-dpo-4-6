@@ -12,19 +12,45 @@ export default {
 
 <template>
   <header>
-    <ul class="nav">
-      <li class="nav-item mt-auto">
-        <!--      <a class="nav-link active" aria-current="page" href="#">Active</a>-->
-        <router-link id="logo" :to="{name: 'resumeStatusLists'}">
-          Главная страница
-        </router-link>
-      </li>
-      <li class="nav-item ms-4 mt-auto">
-        <router-link :to="{name: 'resumeAdd'}">
-          Новое резюме
-        </router-link>
-      </li>
-    </ul>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <router-link id="logo" :to="{ name: 'resumeStatusLists' }" class="nav-link">
+                  Главная страница
+                </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link :to="{ name: 'resumeAdd' }" class="btn btn-outline-success me-2">
+                  Новое резюме
+                </router-link>
+            </li>
+            </ul>
+            </div>
+          </div>
+        </nav>
+
+
+
+            <!-- <ul class="nav">
+              <li class="nav-item mt-auto">
+                
+                <router-link id="logo" :to="{ name: 'resumeStatusLists' }" class="btn btn-outline-primary">
+                  Главная страница
+                </router-link>
+              </li>
+              <li class="nav-item ms-4 mt-auto">
+                <router-link :to="{ name: 'resumeAdd' }" class="btn btn-outline-primary">
+                  Новое резюме
+                </router-link>
+              </li>
+            </ul> -->
   </header>
 
   <main>

@@ -33,6 +33,7 @@ export default {
     methods: {
         addEducation() {
             let newEducation = structuredClone(EMPTY_EDUCATION_DATA);
+            if(!this.educationsData) this.educationsData = [];
             newEducation.index = this.educationsData.length > 0 ?
                 this.educationsData[this.educationsData.length - 1].index + 1 : 0;
 

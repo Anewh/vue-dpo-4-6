@@ -48,7 +48,7 @@ export default {
                     </div>
                     <div class="mb-1 text-muted"> Почтовый адрес для связи - {{ resume.email }}.</div>
                     <div class="mb-1 text-muted"> Контактный телефон - {{ resume.phone }}.</div>
-                    <div class="mb-1 text-muted"> Дата рождения: {{ resume.birthdate }}</div>
+                    <div class="mb-1 text-muted"> Дата рождения: {{ (resume.birthdate??'').substr(0, 10) }}</div>
 
                     <p class="card-text mb-auto" id="infoSkills">Обладаю следующими навыками: {{
                             resume.skills

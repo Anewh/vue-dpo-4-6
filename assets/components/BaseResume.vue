@@ -117,7 +117,7 @@ export default {
                                          v-on:afterValidate="saveFormValue"/>
 
                             <ResumeInputCity label="Город" type="text" fieldName="city" v-model="values.city"
-                                             v-bind:vkData="vkData"/>
+                                             v-bind:vkData="vkData" v-on:afterValidate="saveFormValue"/>
 
                             <ResumeEducationList v-bind:modelValue="values.educations"
                                 v-on:update:modelValue="(value) => saveFormValue('educations', value)"

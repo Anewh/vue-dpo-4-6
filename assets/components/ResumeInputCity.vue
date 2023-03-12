@@ -1,14 +1,12 @@
 <script>
-import { vkApi } from "../controllers/VkApiController.js";
+import {vkApi} from "../controllers/VkApiController.js";
+
 export default {
     name: "ResumeInputCity",
-    props: ['name', 'label', 'type', 'help', 'vkData'],
-    emits: ['city-selected', 'validated', 'isInvalidEvent'],
+    props: ["label", "fieldName", "type", "help", "vkData", "modelValue"],
+    emits: ["update:modelValue"],
     data() {
-        return {
-            hasChanged: false,
-            value: ''
-        }
+        return {}
     },
     mounted() {
         this.queryRussiaCountryId();
@@ -16,13 +14,11 @@ export default {
     computed: {
         inputValue: {
             get() {
-                return this.value;
+                return this.modelValue;
             },
             set(newValue) {
-                this.value = newValue;
-                this.hasChanged = true;
+                this.$emit("update:modelValue", newValue);
                 this.queryCities(newValue);
-                this.$emit('validated', this.name, newValue);
             }
         }
     },
@@ -45,7 +41,7 @@ export default {
             }
             vkApi
                 .get(vkApi.methods.database.getCountries, {
-                    code: 'RU',
+                    code: "RU",
                     count: 1
                 }, (function (err, data) {
                     this.vkData.russiaId = data.response.items[0].id;
@@ -61,17 +57,16 @@ export default {
                 additionalData.push(city.region);
             }
             if (additionalData.length > 0) {
-                s += ' (' + additionalData.join(', ') + ')';
+                s += " (" + additionalData.join(", ") + ")";
             }
             return s;
         },
         selectCity(cityId) {
             let city = this.vkData.cities.find((city) => city.id === cityId);
             this.value = city.title;
-            this.vkData.cities = [];
             this.vkData.selectedCity = city;
-            this.$emit('city-selected', city);
-            this.$emit('validated', this.name, city.title);
+            this.vkData.cities = [];
+            this.$emit("update:modelValue", city.title);
         }
     }
 }
@@ -82,7 +77,7 @@ export default {
         <label class="mb-2">{{ label }}</label>
         <div class="field">
             <input v-bind:type="type" v-model="inputValue" class="form-control"
-                style="width: 350px; margin-left:85px;">
+                   style="width: 350px; margin-left:85px;">
             <div v-if="help" class="form-text mt-2">{{ help }}</div>
             <ul v-show="vkData.cities.length > 0" class="field__helpers list-group">
                 <li v-for="city in vkData.cities" :key="city.id" @click="selectCity(city.id)"

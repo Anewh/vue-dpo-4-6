@@ -2,24 +2,24 @@
 import { vkApi } from "../controllers/VkApiController.js";
 export default {
     name: "EducOrganizationInput",
-    props: ['fieldName', 'vkData'],
-    emits: ['isValidEvent', 'isInvalidEvent'],
+    props: ["modelValue", "fieldName", "vkData"],
+    emits: ["update:modelValue", "afterValidate"],
     data() {
         return {
-            value: ''
         }
     },
     computed: {
         inputValue: {
             get() {
-                return this.value;
+                return this.modelValue;
             },
             set(newValue) {
-                this.value = newValue;
+                this.$emit("update:modelValue", newValue);
+
                 if (this.vkData.selectedCity) {
-                    this.queryUniversities(this.value);
+                    this.queryUniversities(newValue);
                 }
-                this.$emit('isValidEvent', this.fieldName, this.value);
+                this.$emit("afterValidate", this.fieldName, newValue, true);
             }
         }
     },
@@ -38,9 +38,10 @@ export default {
 
         selectUniversity(cityId) {
             let university = this.vkData.universities.find((city) => city.id === cityId);
-            this.value = university.title;
+
             this.vkData.universities = [];
-            this.$emit('isValidEvent', university.title);
+            this.$emit("update:modelValue", university.title);
+            this.$emit("afterValidate", this.fieldName, university.title, true);
         },
     }
 }

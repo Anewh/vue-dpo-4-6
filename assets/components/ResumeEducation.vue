@@ -3,38 +3,37 @@ import ResumeSelect from './ResumeSelect.vue'
 import ResumeInput from './ResumeInput.vue'
 import EducOrganizationInput from './EducOrganizationInput.vue';
 
+export const EDUCATION_TYPES = {
+    level0: "Среднее",
+    level1: "Среднее специальное",
+    level2: "Неоконченное высшее",
+    level3: "Высшее",
+}
+
+export function isComplexEducation(education) {
+    return education.isComplex =
+        education.type === "level1" ||
+        education.type === "level2" ||
+        education.type === "level3";
+}
+
 export default {
     name: "ResumeEducation",
-    components: { ResumeSelect, ResumeInput, EducOrganizationInput },
-    props: ["educationData", "vkData"],
-    emits: ["remove"],
+    components: {ResumeSelect, ResumeInput, EducOrganizationInput},
+    props: ["modelValue", "vkData"],
+    emits: ["update:modelValue", "remove"],
 
     data() {
         return {
-            educationTypes: {
-                level0: 'Среднее',
-                level1: 'Среднее специальное',
-                level2: 'Неоконченное высшее',
-                level3: 'Высшее',
-            }
-        }
-    },
-    computed: {
-        isComplexEduc: {   // Проверка выбранного образования
-            get() {
-                return this.educationData.isComplex = this.educationData.type === this.educationTypes.level1 ||
-                    this.educationData.type === this.educationTypes.level2 ||
-                    this.educationData.type === this.educationTypes.level3;
-            },
-            set(newValue) {
-                this.value = newValue;
-                this.$emit('changed', newValue);
-            }
+            educationTypes: EDUCATION_TYPES,
+            isComplexEducation: isComplexEducation
         }
     },
     methods: {
-        resetField(field) {
-            this.values[field] = '';
+        educationChanged(field, value) {
+            this.educationData = structuredClone(this.modelValue);
+            this.educationData[field] = value;
+            this.$emit("update:modelValue", this.educationData);
         }
     }
 }
@@ -42,30 +41,36 @@ export default {
 
 <template>
     <div class="row">
-        <ResumeSelect isSelectFirst='false' label="Образование" v-bind:values="educationTypes"
-            v-on:changed="(value) => educationData.type = this.educationTypes[value]" />
-            <button class="btn btn-primary" style="margin: 1em; width: 150px; margin-top: 30px" v-on:click="$emit('remove', educationData.index)">
-            Удалить </button>
+        <ResumeSelect isSelectFirst='false' label="Образование" fieldName="type"
+                      v-bind:modelValue="modelValue.type"
+                      v-on:update:modelValue="(value) => educationChanged('type', value)"
+                      v-bind:values="educationTypes"/>
+        <button class="btn btn-primary" style="margin: 1em; width: 150px; margin-top: 30px"
+                v-on:click="$emit('remove', modelValue.index)">
+            Удалить
+        </button>
         <div class="bd-example">
             <!-- <hr> -->
-            <br />
+            <br/>
         </div>
-        <div class="row" v-if="isComplexEduc">
+        <div class="row" v-if="isComplexEducation(modelValue)">
             <!-- <br> -->
             <EducOrganizationInput fieldName="institute" v-bind:vkData="vkData"
-                v-on:isValidEvent="(value) => educationData.institute = value" v-on:isInvalidEvent="resetField" />
-        
+                                   v-bind:modelValue="modelValue.institute"
+                                   v-on:afterValidate="educationChanged"/>
+
             <ResumeInput fieldType="text" fieldName="faculty" label="Факультет"
-                v-on:isValidEvent="(value) => educationData.faculty = value" v-on:isInvalidEvent="resetField" />
-                
+                         v-bind:modelValue="modelValue.faculty"
+                         v-on:afterValidate="educationChanged"/>
+
             <ResumeInput fieldType="number" fieldName="endYear" label="Год окончания"
-                v-on:isValidEvent="(value) => educationData.endYear = value" v-on:isInvalidEvent="resetField" />
+                         v-bind:modelValue="modelValue.endYear"
+                         v-on:afterValidate="educationChanged"/>
 
             <ResumeInput fieldType="text" fieldName="specialization" label="Специализация"
-                v-on:isValidEvent="(value) => educationData.specialization = value" v-on:isInvalidEvent="resetField" />
+                         v-bind:modelValue="modelValue.specialization"
+                         v-on:afterValidate="educationChanged"/>
         </div>
         <div></div>
-        <!-- <button class="btn btn-primary" style="margin: 1em; width: 150px" v-on:click="$emit('remove', educationData.index)">
-            Удалить </button> -->
     </div>
 </template>

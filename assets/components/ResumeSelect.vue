@@ -1,21 +1,19 @@
 <script>
 export default {
     name: "ResumeSelect",
-    props: ["label", "values", 'isSelectFirst'],
-    emits: ["changed"],
+    props: ["label", "fieldName", "values", "modelValue"],
+    emits: ["update:modelValue"],
     data() {
         return {
-            value: this.isSelectFirst=='true' ? Object.keys(this.values)[0] : ''
         }
     },
     computed: {
         selectedValue: {
             get() {
-                return this.value;
+                return this.modelValue;
             },
             set(newValue) {
-                this.value = newValue;
-                this.$emit('changed', newValue);
+                this.$emit("update:modelValue", newValue);
             }
         }
     },

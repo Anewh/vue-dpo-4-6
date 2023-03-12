@@ -3,15 +3,15 @@ import ResumeInput from './ResumeInput.vue'
 import ResumeSelect from './ResumeSelect.vue'
 import ResumeEducation from './ResumeEducation.vue'
 import ResumeGenerator from './ResumeGenerator.vue'
-import ResumeList from './ResumeList.vue'
+import ResumeEducationList from './ResumeEducationList.vue'
 import ResumeInputCity from './ResumeInputCity.vue'
+import {resumeApi} from "../controllers/ResumeApiController";
 
-const RESUME_STATUSES = { level0: 'Новое', level1: 'Назначено собеседование', level2: 'Принят', level3: 'Отказ' };
-const EMPTY_EDUCATION_DATA = { index: 0, type: '', institute: '', faculty: '', specialization: '', endYear: '', isComplex: '', };
+export const RESUME_STATUSES = {level0: "Новое", level1: "Назначено собеседование", level2: "Принят", level3: "Отказ"};
 
 export default {
     name: "BaseResume",
-    components: { ResumeInput, ResumeEducation, ResumeGenerator, ResumeSelect, ResumeList, ResumeInputCity },
+    components: {ResumeInput, ResumeEducation, ResumeGenerator, ResumeSelect, ResumeEducationList, ResumeInputCity},
 
     data() {
         return {
@@ -29,40 +29,47 @@ export default {
                 skills: '',
                 about: '',
 
-                status: RESUME_STATUSES['level0'],
-                educations: [structuredClone(EMPTY_EDUCATION_DATA)],
+                status: "level0",
+                educations: [],
 
                 imagePreview: '', //путь к картинке
-                isImageLoaded: false,
-
-                resumeStatuses: RESUME_STATUSES
             },
 
-            file: '',
+            formValues: {},
+
+            resumeStatuses: RESUME_STATUSES,
 
             vkData: {
                 russiaId: undefined,
                 cities: [],
                 universities: [],
-                selectedCity: undefined
+                selectedCity: undefined,
             },
         }
     },
+    mounted() {
+        if (this.$route.params.id) {
+            resumeApi
+                .getById(parseInt(this.$route.params.id))
+                .then((response) => {
+                    if (response.status === 200) {
+                        this.values = response.data;
+                        this.formValues = structuredClone(response.data);
+                    }
+                });
+        }
+    },
     methods: {
-        resetField(field) {
-            this.values[field] = '';
+        saveFormValue(fieldName, value, isValid = true) {
+            this.formValues[fieldName] = isValid ? value : "";
         },
-        handleFileUpload() { // загрузка файла и отображение фотографии резюме
-            this.file = this.$refs.file.files[0];
-            let reader = new FileReader();
-            reader.addEventListener("load", function () {
-                this.values.isImageLoaded = true;
-                this.values.imagePreview = reader.result;
-            }.bind(this), false);
-            if (this.file) {
-                if (/\.(jpe?g|png|gif)$/i.test(this.file.name)) {
-                    reader.readAsDataURL(this.file);
-                }
+        sendResume() {
+            this.formValues.status = this.values.status;
+
+            if (this.$route.name === "resumeAdd") {
+                resumeApi.add(this.formValues);
+            } else if (this.$route.name === "resumeEdit") {
+                resumeApi.edit(parseInt(this.$route.params.id), this.formValues);
             }
         }
     }
@@ -82,68 +89,73 @@ export default {
             <div id="resume">
                 <div class="row">
                     <div class="col">
-                        <!-- <div id="resume-app"> -->
                         <div class="row g-3">
-                            <ResumeInput fieldType="text" fieldName="firstName" label="Имя"
-                                errorMessage="Введите корректное имя"
-                                v-on:isValidEvent="(value) => values.firstName = value" v-on:isInvalidEvent="resetField" />
+                            <ResumeInput fieldType="text" fieldName="firstName" label="Имя" v-model="values.firstName"
+                                         errorMessage="Введите корректное имя"
+                                         v-on:afterValidate="saveFormValue"/>
 
-                            <ResumeInput fieldType="text" fieldName="lastName" label="Фамилия"
-                                errorMessage="Введите корректную фамилию"
-                                v-on:isValidEvent="(value) => values.lastName = value" v-on:isInvalidEvent="resetField" />
+                            <ResumeInput fieldType="text" fieldName="lastName" label="Фамилия" v-model="values.lastName"
+                                         errorMessage="Введите корректную фамилию"
+                                         v-on:afterValidate="saveFormValue"/>
 
                             <ResumeInput fieldType="text" fieldName="patronymic" label="Отчество"
-                                errorMessage="Введите отчество" v-on:isValidEvent="(value) => values.patronymic = value"
-                                v-on:isInvalidEvent="resetField" />
+                                         v-model="values.patronymic"
+                                         errorMessage="Введите корректное отчество" v-on:afterValidate="saveFormValue"
+                            />
 
-                            <ResumeInput fieldType="text" fieldName="email" label="Email"
-                                errorMessage="Введите корректный email" v-on:isValidEvent="(value) => values.email = value"
-                                v-on:isInvalidEvent="resetField" />
+                            <ResumeInput fieldType="text" fieldName="email" label="Email" v-model="values.email"
+                                         errorMessage="Введите корректный email" v-on:afterValidate="saveFormValue"
+                            />
 
                             <ResumeInput fieldType="date" fieldName="birthdate" label="Дата рождения"
-                                v-on:isValidEvent="(value) => values.birthdate = value" v-on:isInvalidEvent="resetField" />
+                                         v-model="values.birthdate"
+                                         errorMessage="Введите дату рождения"
+                                         v-on:afterValidate="saveFormValue"/>
 
-                            <ResumeInput fieldType="text" fieldName="phone" label="Телефон"
-                                errorMessage="Введите корректный номер телефона"
-                                v-on:isValidEvent="(value) => values.phone = value" v-on:isInvalidEvent="resetField" />
+                            <ResumeInput fieldType="text" fieldName="phone" label="Телефон" v-model="values.phone"
+                                         errorMessage="Введите корректный номер телефона"
+                                         v-on:afterValidate="saveFormValue"/>
 
-                            <ResumeInputCity label="Город" type="text" v-bind:vkData="vkData"
-                                v-on:city-selected="(city) => values.city = city" v-on:isInvalidEvent="resetField" />
+                            <ResumeInputCity label="Город" type="text" fieldName="city" v-model="values.city"
+                                             v-bind:vkData="vkData"/>
 
-                            <ResumeList v-bind:educations="values.educations" v-bind:vkData="vkData" />
+                            <ResumeEducationList v-bind:modelValue="values.educations"
+                                v-on:update:modelValue="(value) => saveFormValue('educations', value)"
+                                v-bind:vkData="vkData"/>
 
-                            <ResumeSelect isSelectFirst='true' label="Статус" v-bind:values="values.resumeStatuses"
-                                v-on:changed="(value) => values.status = values.resumeStatuses[value]" />
+                            <ResumeSelect isSelectFirst="true" label="Статус" fieldName="status" v-model="values.status"
+                                          v-bind:values="resumeStatuses"/>
 
                             <ResumeInput fieldType="text" fieldName="profession" label="Желаемая профессия"
-                                v-on:isValidEvent="(value) => values.profession = value" v-on:isInvalidEvent="resetField" />
+                                         v-model="values.profession"
+                                         errorMessage="Введите корректную профессию"
+                                         v-on:afterValidate="saveFormValue"/>
 
                             <ResumeInput fieldType="number" fieldName="expectedSalary" label="Ожидаемая зарплата"
-                                v-on:isValidEvent="(value) => values.expectedSalary = value"
-                                v-on:isInvalidEvent="resetField" />
+                                         v-model="values.expectedSalary"
+                                         v-on:afterValidate="saveFormValue"
+                            />
 
                             <ResumeInput fieldType="text" fieldName="experience" label="Опыт работы"
-                                v-on:isValidEvent="(value) => values.experience = value" v-on:isInvalidEvent="resetField" />
+                                         v-model="values.experience"
+                                         v-on:afterValidate="saveFormValue"/>
 
-                            <ResumeInput fieldType="text" fieldName="skills" label="Навыки"
-                                v-on:isValidEvent="(value) => values.skills = value" v-on:isInvalidEvent="resetField" />
+                            <ResumeInput fieldType="text" fieldName="skills" label="Навыки" v-model="values.skills"
+                                         v-on:afterValidate="saveFormValue"/>
 
-                            <ResumeInput fieldType="text" fieldName="about" label="О себе"
-                                v-on:isValidEvent="(value) => values.about = value" v-on:isInvalidEvent="resetField" />
+                            <ResumeInput fieldType="text" fieldName="about" label="О себе" v-model="values.about"
+                                         v-on:afterValidate="saveFormValue"/>
 
-                            <div class="input-group mb-3">
-                                <div class="container">
-                                    <div class="large-12 medium-12 small-12 cell">
-                                        <label>Аватар
-                                            <input type="file" class="form-control" id="file" ref="file" accept="image/*"
-                                                v-on:change="handleFileUpload()" />
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
+                            <ResumeInput fieldType="text" fieldName="imagePreview" label="Аватар"
+                                         v-model="values.imagePreview"
+                                         v-on:afterValidate="saveFormValue"/>
                         </div>
+                        <hr>
+                        <button class="btn btn-primary" v-on:click="sendResume">
+                            Применить
+                        </button>
                     </div>
-                    <ResumeGenerator v-bind:resume="values" />
+                    <ResumeGenerator v-bind:resume="formValues"/>
                 </div>
             </div>
         </div>
@@ -155,7 +167,7 @@ input,
 textarea,
 select {
     box-shadow: 12px 12px 16px 0 rgba(0, 0, 0, 0.25),
-        -8px -8px 12px 0 rgba(255, 255, 255, 0.3);
+    -8px -8px 12px 0 rgba(255, 255, 255, 0.3);
 }
 
 .convex {

@@ -1,57 +1,64 @@
 <script>
 
 const validationMethods = {
-    firstName: function (value) {
+    firstName: value => {
         const regex = /^[А-ЯA-Zа-яa-z\s-ё]*$/;
         return regex.test(value);
     },
-    lastName: function (value) {
+    lastName: value => {
         const regex = /^[А-ЯA-Zа-яa-z\s-ё]*$/;
         return regex.test(value);
     },
-    patr: function (value) {
+    patronymic: value => {
+        if (value.length === 0) return true;
         const regex = /^[А-ЯA-Zа-яa-z\s-ё]*$/;
         return regex.test(value);
     },
-    email: function (value) {
-        if (value.length == 0) return true;
-        const regex = RegExp("^((([0-9A-Za-z]{1}[-0-9A-z\.]{1,}[0-9A-Za-z]{1})|([0-9А-Яа-я]{1}[-0-9А-я\.]{1,}[0-9А-Яа-я]{1}))@([-A-Za-z]{1,}){1,2}\.[-A-Za-z]{2,7})$");
+    email: value => {
+        if (value.length === 0) return false;
+        const regex = /^((([\dA-Za-z]{1}[-\dA-z.]+[\dA-Za-z])|([\dА-Яа-я][-\dА-я.]+[\dА-Яа-я]{1}))@([-A-Za-z]+){1,2}\.[-A-Za-z]{2,7})$/;
         return regex.test(value);
     },
-    phone: function (value) {
-        if (value.length == 0) return true;
+    phone: value => {
+        if (value.length === 0) return false;
         const regex = /^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/;
         return regex.test(value);
-    }
+    },
+  profession: value => value.length !== 0,
+  birthdate: value => value.length !== 0,
+  imagePreview: value => {
+    if (value.length === 0) return true;
+    const regex = /(\b(https?):\/\/)?[-A-Za-z\d+&@#/%?=~_|!:,.;]+[-A-Za-z\d+&@#/%=~_|](\.(jpe?g|png))/;
+    return regex.test(value);
+  },
 }
 
 export default {
     name: "ResumeInput",
-    props: ["fieldName", "label", "errorMessage", "fieldType"],
-    emits: ['isValidEvent', 'isInvalidEvent'],
+    props: ["modelValue", "fieldName", "label", "errorMessage", "fieldType"],
+    emits: ["update:modelValue", "afterValidate"],
     data() {
         return {
-            value: "",
             isValid: false,
+        }
+    },
+    watch: {
+        modelValue(newValue, oldValue) {
+            let method = validationMethods[this.fieldName];
+            this.isValid = (!method || method(newValue));
         }
     },
     computed: {
         fieldValue: {
             get() {
-                return this.value;
+                return this.modelValue;
             },
             set(newValue) {
-                this.value = newValue;
-                
-                let method = validationMethods[this.fieldName]; 
+                this.$emit("update:modelValue", newValue);
 
-                this.isValid = (!method || (method && method(newValue)));
-
-                if (this.isValid) {
-                    this.$emit('isValidEvent', this.value);
-                } else {
-                    this.$emit('isInvalidEvent', this.fieldName);
-                }
+                let method = validationMethods[this.fieldName];
+                this.isValid = (!method || method(newValue));
+                this.$emit("afterValidate", this.fieldName, newValue, this.isValid);
             }
         }
     }

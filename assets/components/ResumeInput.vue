@@ -54,6 +54,7 @@ export default {
                 return this.modelValue;
             },
             set(newValue) {
+                //if(this.fieldType == 'date') newValue = newValue.substring(0,10);
                 this.$emit("update:modelValue", newValue);
 
                 let method = validationMethods[this.fieldName];

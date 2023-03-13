@@ -3,6 +3,8 @@ import ResumeSelect from './ResumeSelect.vue'
 import ResumeInput from './ResumeInput.vue'
 import EducOrganizationInput from './EducOrganizationInput.vue';
 
+
+// Компонент, содержащий форму для ввода данных об образовательной организации
 export const EDUCATION_TYPES = {
     level0: "Среднее",
     level1: "Среднее специальное",

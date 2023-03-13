@@ -29,7 +29,9 @@ export default {
                     </div>
                     <div class="col p-4 d-flex flex-column position-static">
                         <p class="card-text mb-auto">Статус: {{ resumeStatuses[resume.status] }}</p>
-                        <h3 class="mb-0">{{ resume.lastName + " " + resume.firstName + " " + resume.patronymic }}</h3>
+                        <h3 class="mb-0">{{ resume.lastName }}</h3>
+                        <h3 class="mb-0">{{ resume.firstName }}</h3>
+                        <h3 class="mb-0">{{ resume.patronymic }}</h3>
                         <div class="mb-0 text-muted">{{ resume.profession }}</div>
                         <div class="mb-1 text-muted"> Опыт работы: {{ resume.experience }}</div>
 

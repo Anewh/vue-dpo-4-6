@@ -35,22 +35,6 @@ export default {
             </div>
           </div>
         </nav>
-
-
-
-            <!-- <ul class="nav">
-              <li class="nav-item mt-auto">
-                
-                <router-link id="logo" :to="{ name: 'resumeStatusLists' }" class="btn btn-outline-primary">
-                  Главная страница
-                </router-link>
-              </li>
-              <li class="nav-item ms-4 mt-auto">
-                <router-link :to="{ name: 'resumeAdd' }" class="btn btn-outline-primary">
-                  Новое резюме
-                </router-link>
-              </li>
-            </ul> -->
   </header>
 
   <main>

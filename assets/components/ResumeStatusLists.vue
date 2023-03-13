@@ -3,6 +3,7 @@ import { RESUME_STATUSES } from './BaseResume'
 import draggable from "vuedraggable";
 import { resumeApi } from "../controllers/ResumeApiController";
 
+// Получение и отображение списков резюме в зависимости от статуса
 export default {
   name: "ResumeStatusLists",
   components: { draggable },
@@ -16,7 +17,8 @@ export default {
     for (const status of Object.keys(this.resumeStatuses)) {
       this.resumeStatusLists[status] = [];
     }
-
+    
+    // получение и группировка всех резюме по статусу  
     resumeApi.getAll()
       .then((response) => {
         for (const resume of response.data) {
@@ -32,11 +34,11 @@ export default {
         newStatus
       );
     },
-    declOfNum(number, titles) { // склонение именительных рядом с числительным
-      cases = [2, 0, 1, 1, 1, 2];
-      //console.log(number + " " + titles[(number % 100 > 4 && number % 100 < 20) ? 2 : cases[(number % 10 < 5) ? number % 10 : 5]]);
-      return number + " " + titles[(number % 100 > 4 && number % 100 < 20) ? 2 : cases[(number % 10 < 5) ? number % 10 : 5]];
-    }
+    
+    // declOfNum(number, titles) { 
+    //   cases = [2, 0, 1, 1, 1, 2];
+    //   return number + " " + titles[(number % 100 > 4 && number % 100 < 20) ? 2 : cases[(number % 10 < 5) ? number % 10 : 5]];
+    // }
   }
 }
 </script>
@@ -52,19 +54,16 @@ export default {
         <template #item="{ element }">
           <div class="card rounded-2 mb-5">
             <img v-if="element.imagePreview" :src="element.imagePreview" class="card-img-top" alt="">
-
             <div class="card-body">
               <h5 class="card-title">
                 {{ element.profession }}
               </h5>
-
               <p class="card-text">
                 {{ element.lastName + ' ' + element.firstName + ' ' + element.patronymic }}
               </p>
               <p class="card-text text-sm">
                 Полных лет - {{ new Date().getFullYear() - new Date(element.birthdate).getFullYear() }}
               </p>
-
               <router-link :to="{ name: 'resumeEdit', params: { id: element.id } }" class="btn btn-outline-secondary">
                 Редактировать
               </router-link>

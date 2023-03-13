@@ -59,7 +59,6 @@ class ResumeRepository extends ServiceEntityRepository
             } else {
                 $resume->addEducation($newEducation);
                 $this->getEntityManager()->persist($newEducation);
-//                $educationRepository->save($newEducation);
             }
         }
 

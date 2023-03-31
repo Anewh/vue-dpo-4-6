@@ -36,7 +36,7 @@ export default {
                     this.vkData.cities = data.response.items;
                 }).bind(this));
         },
-        queryRussiaCountryId() {
+        queryRussiaCountryId() { // получение кода страны - конкретно для РФ
             if (this.vkData.russiaId !== undefined) {
                 return;
             }
@@ -48,7 +48,7 @@ export default {
                     this.vkData.russiaId = data.response.items[0].id;
                 }).bind(this));
         },
-        formatCityData(city) {
+        formatCityData(city) { // мапит данные для аккуратного вывода информации о каждом городе 
             let s = city.title;
             let additionalData = [];
             if (city.area) {

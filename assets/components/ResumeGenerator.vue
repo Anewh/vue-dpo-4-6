@@ -2,6 +2,8 @@
 import {RESUME_STATUSES} from "./BaseResume";
 import {EDUCATION_TYPES, isComplexEducation} from "./ResumeEducation";
 
+// Компонент для отрисовки резюме
+
 export default {
     name: "ResumeGenerator",
     props: ["resume"],

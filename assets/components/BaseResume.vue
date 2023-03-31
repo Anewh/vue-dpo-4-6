@@ -55,7 +55,7 @@ export default {
                 status: "level0",
                 educations: [],
 
-                imagePreview: '', //путь к картинке
+                imagePreview: '', 
             },
 
             formValues: {},
@@ -76,7 +76,6 @@ export default {
                 .getById(parseInt(this.$route.params.id))
                 .then((response) => {
                     if (response.status === 200) {
-                        // const data = processResponse(response.data);
                         response.data['birthdate'] = response.data['birthdate'].substring(0, 10);
                         this.values = response.data;
                         this.formValues = structuredClone(response.data);

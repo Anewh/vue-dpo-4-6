@@ -34,11 +34,6 @@ export default {
         newStatus
       );
     },
-    
-    // declOfNum(number, titles) { 
-    //   cases = [2, 0, 1, 1, 1, 2];
-    //   return number + " " + titles[(number % 100 > 4 && number % 100 < 20) ? 2 : cases[(number % 10 < 5) ? number % 10 : 5]];
-    // }
   }
 }
 </script>
@@ -49,8 +44,10 @@ export default {
       <p class="text-center border-bottom mb-3 pb-3">
         {{ resumeStatuses[status] + ' (' + resumes.length + ')' }}
       </p>
+      <!-- Drag-and-drop -->
       <draggable :list="resumeStatusLists[status]" :component-data="{ status: status }" group="cards" itemKey="id"
         @end="sendStatusUpdate">
+        <!-- не переименовывать element!!! -->
         <template #item="{ element }">
           <div class="card rounded-2 mb-5">
             <img v-if="element.imagePreview" :src="element.imagePreview" class="card-img-top" alt="">

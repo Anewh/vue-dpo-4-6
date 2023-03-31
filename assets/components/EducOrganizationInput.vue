@@ -1,7 +1,8 @@
 <script>
 import { vkApi } from "../controllers/VkApiController.js";
 
-// компонент для выбора образовательного учреждения из списка из API vk
+// компонент для выбора образовательного учреждения из списка полученных из API vk
+
 export default {
     name: "EducOrganizationInput",
     props: ["modelValue", "fieldName", "vkData"],

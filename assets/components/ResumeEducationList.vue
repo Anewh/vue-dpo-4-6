@@ -1,6 +1,9 @@
 <script>
 import ResumeEducation from './ResumeEducation.vue'
 
+// Компонент, содержащий список форм для образований
+// Добавление, удаление образования. Изменение полей формы образования - в resumeEducation
+
 const EMPTY_EDUCATION_DATA = {
     index: 0,
     type: '',
